@@ -40,14 +40,16 @@ function show_help {
 }
 
 ########## function ############
+function list_package {
+    echo "Packages found on device:"
+    eval "adb shell 'ls -d /data/data/*  | cut -d \"/\" -f 4' "
+    exit 0
+}
 
+function list_package_files {
+}
 
 ########## main ############
-
-if [ $# -eq 0 ]; then
-	show_help
-	exit 1
-fi
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -56,8 +58,12 @@ while [ $# -gt 0 ]; do
             exit 0
             ;;
         info)
+			list_package
+			exit 0
 			;;
         list)
+			list_package_files
+			exit 0
             ;;
         dump)
             ;;
@@ -68,3 +74,6 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+show_help
+exit 1
