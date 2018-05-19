@@ -33,7 +33,7 @@ function fatal {
 
 function show_help {
 	echo "Usage: `basename $0` <command>"
-	echo "    info                           available packages found on device"
+	echo "    info                           list available packages found on device"
     echo "    list <package-name>            list all files inside the data directory of <package-name>"
     echo "    dump <package-name> <dir>      dump data of <package-name> to <dir>"
     echo ""
