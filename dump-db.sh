@@ -28,7 +28,7 @@ function success {
 function fatal {
     error "$1"
     echo ""
-    exit
+    exit 1
 }
 
 function show_help {
@@ -42,11 +42,27 @@ function show_help {
 ########## function ############
 function list_package {
     echo "Packages found on device:"
-    eval "adb shell 'ls -d /data/data/*  | cut -d \"/\" -f 4' "
+    adb shell 'ls -d /data/data/*  | cut -d / -f 4'
+    response=$?
+    if [ $response -eq 127 ]; then
+		fatal "adb is not installed"
+	elif [ $response -ne 0 ]; then
+		fatal "No device or multiple devices attached to adb"
+	fi
     exit 0
 }
 
 function list_package_files {
+	name=$1
+	echo "files found on $name:"
+    adb shell 'ls -d /data/data/$name/*  | cut -d / -f 5'
+    response=$?
+    if [ $response -eq 127 ]; then
+		fatal "adb is not installed"
+	elif [ $response -ne 0 ]; then
+		fatal "No device or multiple devices attached to adb"
+	fi
+    exit 0
 }
 
 ########## main ############
@@ -59,9 +75,9 @@ while [ $# -gt 0 ]; do
             ;;
         info)
 			list_package
-			exit 0
 			;;
         list)
+			shift
 			list_package_files
 			exit 0
             ;;
